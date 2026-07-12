@@ -26,10 +26,15 @@ const userSchema = new mongoose.Schema(
     },
     authProvider: {
       type: String,
-      enum: ['local', 'facebook'],
+      enum: ['local', 'facebook', 'google'],
       default: 'local',
     },
     facebookId: {
+      type: String,
+      sparse: true,
+      unique: true,
+    },
+    googleId: {
       type: String,
       sparse: true,
       unique: true,

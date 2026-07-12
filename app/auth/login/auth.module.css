@@ -140,6 +140,22 @@
   box-shadow: 0 2px 8px rgba(24, 119, 242, 0.25);
 }
 
+.googleBtn {
+  background: white;
+  color: #3c4043;
+}
+
+.googleBtn:hover:not(:disabled) {
+  background: #f8f9fa;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  transform: translateY(-1px);
+}
+
+.googleBtn:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
 .socialIcon {
   width: 20px;
   height: 20px;

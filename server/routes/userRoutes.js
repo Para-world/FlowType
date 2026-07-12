@@ -24,14 +24,22 @@ const {
   facebookRedirect,
   facebookCallback,
 } = require('../controllers/facebookController');
+const {
+  googleRedirect,
+  googleCallback,
+} = require('../controllers/googleController');
 
-// ─── Public ─────────────────────────────────────────
+// ─── Regular Auth Routes ───────────────────────────
 router.post('/register', registerRules, validate, registerUser);
 router.post('/login', loginRules, validate, loginUser);
 
-// ─── Facebook OAuth ─────────────────────────────────
+// ─── OAuth Routes (Facebook) ─────────────────────────
 router.get('/auth/facebook', facebookRedirect);
 router.get('/auth/facebook/callback', facebookCallback);
+
+// ─── OAuth Routes (Google) ─────────────────────────
+router.get('/auth/google', googleRedirect);
+router.get('/auth/google/callback', googleCallback);
 
 // ─── Protected ──────────────────────────────────────
 router.get('/me', protect, getMe);
