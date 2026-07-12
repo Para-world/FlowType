@@ -1,0 +1,28 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.label {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.grade {
+  font-size: 5rem;
+  font-weight: 800;
+  line-height: 1;
+  font-family: var(--font-mono);
+  text-shadow: 0 0 20px rgba(255,255,255,0.1);
+}
+
+.gradeS { color: var(--accent); text-shadow: 0 0 30px rgba(var(--accent-rgb), 0.4); }
+.gradeA { color: var(--success); text-shadow: 0 0 30px rgba(74, 222, 128, 0.4); }
+.gradeB { color: var(--info); text-shadow: 0 0 30px rgba(96, 165, 250, 0.4); }
+.gradeC { color: var(--warning); text-shadow: 0 0 30px rgba(251, 191, 36, 0.4); }
+.gradeD { color: var(--error); }
+.gradeF { color: var(--text-muted); }

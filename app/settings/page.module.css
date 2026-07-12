@@ -1,0 +1,111 @@
+.container {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.saveStatus {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  animation: fadeIn 0.3s ease;
+}
+
+.grid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+}
+
+.sectionCard {
+  padding: var(--space-xl);
+}
+
+.sectionTitle {
+  font-size: 1.25rem;
+  color: var(--text-secondary);
+  margin-bottom: var(--space-lg);
+  padding-bottom: var(--space-sm);
+  border-bottom: 1px solid var(--bg-card-border);
+}
+
+.settingGroup {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-md) 0;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.settingGroup:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.label {
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.themeOptions {
+  display: flex;
+  gap: 12px;
+}
+
+.themeBtn {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  background-color: var(--btn-color);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.themeBtn:hover {
+  transform: scale(1.1);
+}
+
+.activeTheme {
+  border-color: white;
+  box-shadow: 0 0 10px var(--btn-color);
+  transform: scale(1.1);
+}
+
+.select {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  border: 1px solid var(--bg-card-border);
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  font-family: inherit;
+  min-width: 150px;
+  cursor: pointer;
+}
+
+.select:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.toggleGroup {
+  display: flex;
+  background: var(--bg-primary);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--bg-card-border);
+  overflow: hidden;
+}
+
+.toggleBtn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  padding: 8px 16px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.activeToggle {
+  background: var(--accent);
+  color: white;
+}

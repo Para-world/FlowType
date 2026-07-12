@@ -1,0 +1,88 @@
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  border: 1px solid transparent;
+  outline: none;
+  white-space: nowrap;
+}
+
+.btn:active {
+  transform: scale(0.97);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Variants */
+.primary {
+  background: var(--accent);
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(var(--accent-rgb), 0.3);
+}
+
+.primary:hover {
+  background: var(--accent-secondary);
+  box-shadow: 0 6px 16px rgba(var(--accent-rgb), 0.4);
+}
+
+.secondary {
+  background: var(--bg-card);
+  color: var(--text-primary);
+  border-color: var(--bg-card-border);
+}
+
+.secondary:hover {
+  background: var(--surface-hover);
+  border-color: rgba(var(--accent-rgb), 0.2);
+}
+
+.ghost {
+  background: transparent;
+  color: var(--text-secondary);
+}
+
+.ghost:hover {
+  background: var(--surface-hover);
+  color: var(--text-primary);
+}
+
+.danger {
+  background: var(--error-dim);
+  color: var(--error);
+}
+
+.danger:hover {
+  background: rgba(248, 113, 113, 0.2);
+}
+
+/* Sizes */
+.sm {
+  padding: 6px 12px;
+  font-size: 0.8rem;
+  border-radius: var(--radius-sm);
+}
+
+.md {
+  padding: 10px 18px;
+  font-size: 0.95rem;
+}
+
+.lg {
+  padding: 14px 24px;
+  font-size: 1.1rem;
+  border-radius: var(--radius-lg);
+}
+
+.icon {
+  flex-shrink: 0;
+}

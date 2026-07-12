@@ -1,0 +1,29 @@
+.container {
+  display: flex;
+  gap: var(--space-md);
+  padding: var(--space-md);
+  background: var(--info-dim);
+  border: 1px solid rgba(96, 165, 250, 0.2);
+  border-radius: var(--radius-md);
+  margin-top: var(--space-lg);
+}
+
+.icon {
+  color: var(--info);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.content h4 {
+  color: var(--info);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 4px;
+}
+
+.content p {
+  color: var(--text-primary);
+  font-size: 0.95rem;
+  line-height: 1.4;
+}

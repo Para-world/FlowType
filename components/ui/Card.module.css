@@ -1,0 +1,26 @@
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--bg-card-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  backdrop-filter: blur(12px);
+  transition: all var(--transition-smooth);
+}
+
+.default {
+}
+
+.primary {
+  background: var(--accent-dim);
+  border-color: rgba(var(--accent-rgb), 0.2);
+}
+
+.elevated {
+  background: var(--bg-card-solid);
+  box-shadow: var(--shadow-lg);
+}
+
+.card:hover {
+  background: var(--bg-card-hover);
+  border-color: rgba(var(--accent-rgb), 0.15);
+}
