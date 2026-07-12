@@ -20,10 +20,18 @@ const {
   changePasswordRules,
   updateProfileRules,
 } = require('../middlewares/validateMiddleware');
+const {
+  facebookRedirect,
+  facebookCallback,
+} = require('../controllers/facebookController');
 
 // ─── Public ─────────────────────────────────────────
 router.post('/register', registerRules, validate, registerUser);
 router.post('/login', loginRules, validate, loginUser);
+
+// ─── Facebook OAuth ─────────────────────────────────
+router.get('/auth/facebook', facebookRedirect);
+router.get('/auth/facebook/callback', facebookCallback);
 
 // ─── Protected ──────────────────────────────────────
 router.get('/me', protect, getMe);

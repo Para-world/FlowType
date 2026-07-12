@@ -21,9 +21,18 @@ const userSchema = new mongoose.Schema(
     },
     password: {
       type: String,
-      required: [true, 'Password is required'],
       minlength: [6, 'Password must be at least 6 characters'],
       select: false, // Never returned in queries by default
+    },
+    authProvider: {
+      type: String,
+      enum: ['local', 'facebook'],
+      default: 'local',
+    },
+    facebookId: {
+      type: String,
+      sparse: true,
+      unique: true,
     },
     avatarUrl: {
       type: String,

@@ -39,10 +39,10 @@ export default function Topbar() {
         </div>
 
         <div className={styles.avatar}>
-          {user.avatarUrl ? (
+          {user?.avatarUrl ? (
             <img src={user.avatarUrl} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
           ) : (
-            user.name.charAt(0).toUpperCase()
+            (user?.name || user?.username || '?').charAt(0).toUpperCase()
           )}
         </div>
       </div>
