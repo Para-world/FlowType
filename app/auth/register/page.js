@@ -49,12 +49,14 @@ export default function Register() {
     }
   };
 
+  const apiBase = process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'http://localhost:5000';
+
   const handleFacebookLogin = () => {
-    window.location.href = 'http://localhost:5000/api/users/auth/facebook';
+    window.location.href = `${apiBase}/api/users/auth/facebook`;
   };
 
   const handleGoogleLogin = () => {
-    window.location.href = 'http://localhost:5000/api/users/auth/google';
+    window.location.href = `${apiBase}/api/users/auth/google`;
   };
 
   return (

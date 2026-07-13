@@ -97,7 +97,7 @@ export default function Profile() {
         <div className={styles.avatarSection}>
           <div className={styles.avatarLarge} onClick={() => fileInputRef.current?.click()} style={{ cursor: 'pointer' }}>
             {user.avatarUrl ? (
-              <img src={`http://localhost:5000${user.avatarUrl}`} alt="Avatar" className={styles.avatarImage} />
+              <img src={`${process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'http://localhost:5000'}${user.avatarUrl}`} alt="Avatar" className={styles.avatarImage} />
             ) : (
               user.name.charAt(0).toUpperCase()
             )}
@@ -295,7 +295,7 @@ export default function Profile() {
                 ? JSON.parse(localStorage.getItem('flowtype-storage'))?.state?.token 
                 : '';
                 
-              const res = await fetch('http://localhost:5000/api/users/avatar', {
+              const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/users/avatar`, {
                 method: 'POST',
                 headers: {
                   'Authorization': `Bearer ${token}`
