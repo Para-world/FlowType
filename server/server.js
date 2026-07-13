@@ -59,6 +59,9 @@ app.use('/api/users/register', authLimiter);
 
 // ─── Body Parsing ────────────────────────────────────
 
+// Serve static files (uploaded avatars, etc.)
+app.use(express.static(path.join(__dirname, 'public')));
+
 // Body parser — limit payload size
 app.use(express.json({ limit: '10kb' }));
 app.use(express.urlencoded({ extended: true, limit: '10kb' }));
