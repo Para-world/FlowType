@@ -5,6 +5,8 @@ export const createSettingsSlice = (set) => ({
     fontFamily: 'mono', // sans, mono
     cursorStyle: 'line', // line, block, underline
     soundEnabled: true,
+    soundProfile: 'brown', // blue, brown, red
+    soundVolume: 50, // 0-100
     animationLevel: 'full', // full, reduced, none
     keyboardGuide: true,
     timerDisplay: true,

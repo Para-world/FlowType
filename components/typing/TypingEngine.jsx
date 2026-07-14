@@ -13,6 +13,7 @@ import { useConfidenceEngine } from '@/hooks/useConfidenceEngine';
 
 import ModeSelector from './ModeSelector';
 import ModuleSelector from './ModuleSelector';
+import SoundToggle from './SoundToggle';
 import WordsDisplay from './WordsDisplay';
 import Cursor from './Cursor';
 import LiveStats from './LiveStats';
@@ -207,10 +208,13 @@ export default function TypingEngine({ lesson = null }) {
             onValueChange={setModeValue}
           />
           {(mode === 'time' || mode === 'words') && (
-            <ModuleSelector 
-              currentModule={module}
-              onModuleChange={setModule}
-            />
+            <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+              <SoundToggle />
+              <ModuleSelector 
+                currentModule={module}
+                onModuleChange={setModule}
+              />
+            </div>
           )}
         </div>
       )}

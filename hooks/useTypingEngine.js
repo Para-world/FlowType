@@ -1,11 +1,14 @@
 import { useState, useCallback, useRef } from 'react';
 import { calculateWpm, calculateRawWpm, calculateAccuracy, calculateConsistency } from '@/lib/scoring';
+import { useSoundEngine } from '@/hooks/useSoundEngine';
 
 export function useTypingEngine(initialWords, mode, modeValue, isLesson = false) {
   const [isActive, setIsActive] = useState(false);
   const [isFinished, setIsFinished] = useState(false);
   const [finalResult, setFinalResult] = useState(null);
   
+  const { playKeystroke, playError } = useSoundEngine();
+
   const startTimeRef = useRef(null);
   const wpmHistoryRef = useRef([]);
   const charErrorMapRef = useRef({}); // { char: { correct: N, incorrect: N } }
@@ -109,6 +112,12 @@ export function useTypingEngine(initialWords, mode, modeValue, isLesson = false)
       const expectedChar = activeWord.original[activeWord.typed.length];
       const isCorrect = char === expectedChar;
 
+      if (isCorrect) {
+        playKeystroke();
+      } else {
+        playError();
+      }
+
       // Track per-character errors for adaptive algorithm
       if (expectedChar) {
         const lc = expectedChar.toLowerCase();
@@ -168,6 +177,7 @@ export function useTypingEngine(initialWords, mode, modeValue, isLesson = false)
 
       // STRICT MODE: prevent space if word isn't finished correctly
       if (isLesson && !isComplete) {
+         playError();
          return {
            ...prev,
            stats: {
@@ -177,6 +187,8 @@ export function useTypingEngine(initialWords, mode, modeValue, isLesson = false)
            }
          };
       }
+
+      playKeystroke();
 
       const missed = Math.max(0, activeWord.original.length - activeWord.typed.length);
       
@@ -214,6 +226,8 @@ export function useTypingEngine(initialWords, mode, modeValue, isLesson = false)
       const { wordIndex, formattedWords, stats } = prev;
       const newWords = [...formattedWords];
       let activeWord = newWords[wordIndex];
+
+      playKeystroke();
 
       let newWordIndex = wordIndex;
       let newCharIndex = prev.charIndex;
