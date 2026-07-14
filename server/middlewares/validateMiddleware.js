@@ -60,7 +60,7 @@ const saveTestRules = [
   body('extraChars').isInt({ min: 0 }).withMessage('extraChars must be ≥ 0'),
   body('missedChars').isInt({ min: 0 }).withMessage('missedChars must be ≥ 0'),
   body('mode').isIn(['time', 'words', 'paragraph', 'quotes']).withMessage('Invalid mode'),
-  body('module').isIn(['words', 'numbers', 'symbols', 'mixed', 'code', 'capitals', 'punctuation']).withMessage('Invalid module'),
+  body('module').isIn(['words', 'numbers', 'symbols', 'mixed', 'code', 'capitals', 'punctuation', 'adaptive']).withMessage('Invalid module'),
 ];
 
 // ───────────────────────────────────────

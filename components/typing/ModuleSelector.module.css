@@ -46,3 +46,25 @@
 .active .icon, .btn:hover .icon {
   opacity: 1;
 }
+
+/* Adaptive module — distinct accent styling */
+.adaptiveBtn {
+  border-color: rgba(139, 92, 246, 0.25);
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.06), rgba(59, 130, 246, 0.06));
+}
+
+.adaptiveBtn:hover {
+  border-color: rgba(139, 92, 246, 0.4);
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.12), rgba(59, 130, 246, 0.12));
+}
+
+.adaptiveBtn.active {
+  border-color: rgba(139, 92, 246, 0.5);
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.18), rgba(59, 130, 246, 0.18));
+  color: #a78bfa;
+}
+
+.adaptiveBtn .icon {
+  font-style: normal;
+  opacity: 1;
+}

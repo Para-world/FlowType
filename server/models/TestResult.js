@@ -26,7 +26,7 @@ const testResultSchema = new mongoose.Schema(
     module: {
       type: String,
       required: true,
-      enum: ['words', 'numbers', 'symbols', 'mixed', 'code', 'capitals', 'punctuation'],
+      enum: ['words', 'numbers', 'symbols', 'mixed', 'code', 'capitals', 'punctuation', 'adaptive'],
     },
 
     // Per-second WPM snapshots for charting

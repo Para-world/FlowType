@@ -3,7 +3,6 @@
   height: 140px; /* ~3 lines */
   overflow: hidden;
   position: relative;
-  /* Mask image to fade out words at the top and bottom */
   mask-image: linear-gradient(
     to bottom,
     transparent 0%,
@@ -26,7 +25,7 @@
   flex-wrap: wrap;
   gap: 12px;
   align-content: flex-start;
-  padding-top: 12px; /* Buffer for scrolling */
+  padding-top: 12px;
   will-change: transform;
 }
 
@@ -36,27 +35,33 @@
   font-size: 1.75rem;
   font-weight: 500;
   color: var(--text-muted);
-  transition: opacity var(--transition-smooth);
+  transition: opacity 0.25s ease;
 }
 
 .char {
-  transition: color 0.1s ease;
   position: relative;
+  display: inline-block;
+  transition: color 0.08s ease;
 }
 
-/* Statuses */
+/* ─── Character States ─── */
+
 .active {
   color: var(--text-secondary);
   opacity: 1;
 }
 
 .completed {
-  opacity: 0.5; /* Dim completed words to focus on active */
+  opacity: 0.45;
+  transition: opacity 0.4s ease;
+}
+
+.currentChar {
+  color: var(--text-primary);
 }
 
 .correctChar {
   color: var(--text-correct);
-  text-shadow: 0 0 10px rgba(var(--accent-rgb), 0.3);
 }
 
 .incorrectChar {
@@ -64,10 +69,7 @@
   text-decoration: underline;
   text-decoration-color: var(--text-incorrect);
   text-decoration-thickness: 2px;
-}
-
-.currentChar {
-  color: var(--text-primary);
+  text-underline-offset: 3px;
 }
 
 .incorrectWord {

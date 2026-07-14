@@ -10,15 +10,15 @@ export default function Cursor({ isActive, charIndex, wordIndex }) {
   const { settings } = useStore();
   const blinkTween = useRef(null);
 
+  // Setup blinking when idle
   useEffect(() => {
-    // Setup blinking animation
     blinkTween.current = gsap.to(cursorRef.current, {
       opacity: 0,
       repeat: -1,
       yoyo: true,
-      duration: 0.5,
-      ease: 'steps(1)',
-      paused: isActive // Pause blinking when actively typing
+      duration: 0.53,
+      ease: 'power2.inOut',
+      paused: isActive,
     });
 
     return () => {
@@ -26,6 +26,7 @@ export default function Cursor({ isActive, charIndex, wordIndex }) {
     };
   }, [isActive]);
 
+  // Pause/resume blink
   useEffect(() => {
     if (isActive && blinkTween.current) {
       blinkTween.current.pause();
@@ -35,15 +36,8 @@ export default function Cursor({ isActive, charIndex, wordIndex }) {
     }
   }, [isActive]);
 
-  // Position cursor using GSAP based on active character
+  // Smooth cursor positioning — the hero animation
   useEffect(() => {
-    // Find the active character element
-    const activeWordEl = document.querySelector(`.${styles.activeWordClass}`); // Wait, this relies on finding the char.
-    // A better approach is to let CSS position the cursor relative to the active char, or use JS to find bounding client rect.
-    // Let's use JS to find the exact DOM node of the current char.
-    
-    // We need a stable way to select the current char. 
-    // In WordsDisplay, we can add an ID or class to the current char.
     const currentCharEl = document.querySelector('[data-current-char="true"]');
     
     if (currentCharEl && cursorRef.current) {
@@ -54,10 +48,10 @@ export default function Cursor({ isActive, charIndex, wordIndex }) {
       const y = rect.top - parentRect.top;
 
       gsap.to(cursorRef.current, {
-        x: x,
-        y: y,
-        duration: 0.1, // Smooth glide
-        ease: 'power2.out'
+        x,
+        y,
+        duration: 0.08,
+        ease: 'power2.out',
       });
     }
   }, [isActive, charIndex, wordIndex]);

@@ -8,6 +8,7 @@ export function useTypingEngine(initialWords, mode, modeValue) {
   
   const startTimeRef = useRef(null);
   const wpmHistoryRef = useRef([]);
+  const charErrorMapRef = useRef({}); // { char: { correct: N, incorrect: N } }
 
   const formatWords = useCallback((wordsArray) => {
     return wordsArray.map(word => ({
@@ -57,6 +58,7 @@ export function useTypingEngine(initialWords, mode, modeValue) {
       consistency: finalConsistency,
       time: Math.round(elapsedSeconds),
       wpmHistory: [...wpmHistoryRef.current],
+      charErrorMap: { ...charErrorMapRef.current },
       ...state.stats
     });
   }, [state.stats, isFinished]);
@@ -80,6 +82,7 @@ export function useTypingEngine(initialWords, mode, modeValue) {
     });
     startTimeRef.current = null;
     wpmHistoryRef.current = [];
+    charErrorMapRef.current = {};
   }, [formatWords]);
 
   const recordSnapshot = useCallback((elapsedSeconds) => {
@@ -107,7 +110,21 @@ export function useTypingEngine(initialWords, mode, modeValue) {
       const newWords = [...formattedWords];
       newWords[wordIndex] = { ...activeWord, typed: activeWord.typed + char };
       
-      const isCorrect = char === activeWord.original[activeWord.typed.length];
+      const expectedChar = activeWord.original[activeWord.typed.length];
+      const isCorrect = char === expectedChar;
+
+      // Track per-character errors for adaptive algorithm
+      if (expectedChar) {
+        const lc = expectedChar.toLowerCase();
+        if (!charErrorMapRef.current[lc]) {
+          charErrorMapRef.current[lc] = { correct: 0, incorrect: 0 };
+        }
+        if (isCorrect) {
+          charErrorMapRef.current[lc].correct++;
+        } else {
+          charErrorMapRef.current[lc].incorrect++;
+        }
+      }
       
       return {
         ...prev,

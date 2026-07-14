@@ -3,6 +3,7 @@
 import styles from './ModuleSelector.module.css';
 
 const modules = [
+  { id: 'adaptive', icon: '🧠', label: 'adaptive' },
   { id: 'words', icon: '≡', label: 'words' },
   { id: 'capitals', icon: 'A', label: 'capitals' },
   { id: 'numbers', icon: '#', label: 'numbers' },
@@ -18,7 +19,7 @@ export default function ModuleSelector({ currentModule, onModuleChange }) {
       {modules.map(mod => (
         <button
           key={mod.id}
-          className={`${styles.btn} ${currentModule === mod.id ? styles.active : ''}`}
+          className={`${styles.btn} ${currentModule === mod.id ? styles.active : ''} ${mod.id === 'adaptive' ? styles.adaptiveBtn : ''}`}
           onClick={() => onModuleChange(mod.id)}
         >
           <span className={styles.icon}>{mod.icon}</span>

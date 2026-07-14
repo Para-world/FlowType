@@ -3,34 +3,33 @@
   top: 0;
   left: 0;
   background: var(--cursor-color);
-  box-shadow: 0 0 10px rgba(var(--accent-rgb), 0.4);
-  transition: width 0.1s, height 0.1s;
   pointer-events: none;
   z-index: 10;
-  font-size: 1.75rem; /* Match .word font-size */
+  font-size: 1.75rem;
+  will-change: transform;
+  border-radius: 1px;
 }
 
 /* Styles */
 .line {
-  width: 3px;
-  height: 1.15em;
-  border-radius: 2px;
-  margin-top: 0.1em;
-  margin-left: -1.5px;
+  width: 2.5px;
+  height: 1.2em;
+  margin-top: 0.08em;
+  margin-left: -1px;
 }
 
 .block {
   width: 0.6em;
-  height: 1.15em;
-  margin-top: 0.1em;
-  opacity: 0.5;
+  height: 1.2em;
+  margin-top: 0.08em;
+  opacity: 0.4;
 }
 
 .underline {
   width: 0.8em;
-  height: 3px;
-  margin-top: 1.25em;
-  border-radius: 2px;
+  height: 2.5px;
+  margin-top: 1.3em;
+  border-radius: 1px;
 }
 
 @media (max-width: 768px) {

@@ -7,6 +7,7 @@ import { useKeyboard } from '@/hooks/useKeyboard';
 import { generateWordsList } from '@/data/wordBanks';
 import { getRandomQuote } from '@/data/quotes';
 import { getRandomParagraph } from '@/data/paragraphs';
+import { generateAdaptiveWords, saveCharErrors } from '@/data/adaptiveGenerator';
 
 import ModeSelector from './ModeSelector';
 import ModuleSelector from './ModuleSelector';
@@ -30,6 +31,10 @@ export default function TypingEngine({ lesson = null }) {
     
     if (lesson) {
       rawText = lesson.content;
+    } else if (module === 'adaptive') {
+      // Adaptive mode uses the weakness-based generator
+      const count = mode === 'words' ? modeValue : 100;
+      return generateAdaptiveWords(count);
     } else if (mode === 'time') {
       // Generate enough words to not run out easily (100)
       rawText = generateWordsList(module, 100).join(' ');
@@ -113,6 +118,11 @@ export default function TypingEngine({ lesson = null }) {
   // Handle saving result
   useEffect(() => {
     if (isFinished && finalResult) {
+      // Always save char error data for the adaptive algorithm (even for guests)
+      if (finalResult.charErrorMap) {
+        saveCharErrors(finalResult.charErrorMap);
+      }
+
       if (isAuthenticated) {
         if (lesson) {
           // It's a lesson, save lesson progress
