@@ -4,6 +4,54 @@ import { useEffect, useRef, useState, memo } from 'react';
 import gsap from 'gsap';
 import styles from './WordsDisplay.module.css';
 
+const Word = memo(({ wordObj, isActiveWord, isCompleted, charIndex, wordRef }) => {
+  let wordStatusClass = '';
+  if (wordObj.status === 'correct') wordStatusClass = styles.correctWord;
+  else if (wordObj.status === 'incorrect') wordStatusClass = styles.incorrectWord;
+
+  return (
+    <div 
+      className={`${styles.word} ${isActiveWord ? styles.active : ''} ${isCompleted ? styles.completed : ''} ${wordStatusClass}`}
+      ref={wordRef}
+    >
+      {wordObj.original.split('').map((char, j) => {
+        let charClass = '';
+        if (isActiveWord) {
+          if (j < charIndex) {
+            charClass = wordObj.typed[j] === char ? styles.correctChar : styles.incorrectChar;
+          } else if (j === charIndex) {
+            charClass = styles.currentChar;
+          }
+        } else if (isCompleted) {
+          charClass = wordObj.typed[j] === char ? styles.correctChar : styles.incorrectChar;
+        }
+
+        return (
+          <span 
+            key={j} 
+            className={`${styles.char} ${charClass}`}
+            data-current-char={isActiveWord && j === charIndex}
+          >
+            {char}
+          </span>
+        );
+      })}
+      
+      {/* Extra typed characters */}
+      {wordObj.typed.length > wordObj.original.length && (
+        <span className={styles.extraChars}>
+          {wordObj.typed.slice(wordObj.original.length).split('').map((char, j) => (
+            <span key={`extra-${j}`} className={`${styles.char} ${styles.incorrectChar}`}>
+              {char}
+            </span>
+          ))}
+        </span>
+      )}
+    </div>
+  );
+});
+Word.displayName = 'Word';
+
 const WordsDisplay = memo(({ words, wordIndex, charIndex }) => {
   const containerRef = useRef(null);
   const activeWordRef = useRef(null);
@@ -54,51 +102,16 @@ const WordsDisplay = memo(({ words, wordIndex, charIndex }) => {
         {words.map((wordObj, i) => {
           const isActiveWord = i === wordIndex;
           const isCompleted = i < wordIndex;
-          
-          let wordStatusClass = '';
-          if (wordObj.status === 'correct') wordStatusClass = styles.correctWord;
-          else if (wordObj.status === 'incorrect') wordStatusClass = styles.incorrectWord;
 
           return (
-            <div 
-              key={i} 
-              className={`${styles.word} ${isActiveWord ? styles.active : ''} ${isCompleted ? styles.completed : ''} ${wordStatusClass}`}
-              ref={isActiveWord ? activeWordRef : null}
-            >
-              {wordObj.original.split('').map((char, j) => {
-                let charClass = '';
-                if (isActiveWord) {
-                  if (j < charIndex) {
-                    charClass = wordObj.typed[j] === char ? styles.correctChar : styles.incorrectChar;
-                  } else if (j === charIndex) {
-                    charClass = styles.currentChar;
-                  }
-                } else if (isCompleted) {
-                  charClass = wordObj.typed[j] === char ? styles.correctChar : styles.incorrectChar;
-                }
-
-                return (
-                  <span 
-                    key={j} 
-                    className={`${styles.char} ${charClass}`}
-                    data-current-char={isActiveWord && j === charIndex}
-                  >
-                    {char}
-                  </span>
-                );
-              })}
-              
-              {/* Extra typed characters */}
-              {wordObj.typed.length > wordObj.original.length && (
-                <span className={styles.extraChars}>
-                  {wordObj.typed.slice(wordObj.original.length).split('').map((char, j) => (
-                    <span key={`extra-${j}`} className={`${styles.char} ${styles.incorrectChar}`}>
-                      {char}
-                    </span>
-                  ))}
-                </span>
-              )}
-            </div>
+            <Word
+              key={i}
+              wordObj={wordObj}
+              isActiveWord={isActiveWord}
+              isCompleted={isCompleted}
+              charIndex={isActiveWord ? charIndex : null} // Only pass changing charIndex to active word
+              wordRef={isActiveWord ? activeWordRef : null}
+            />
           );
         })}
       </div>

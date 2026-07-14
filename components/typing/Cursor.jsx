@@ -50,8 +50,8 @@ export default function Cursor({ isActive, charIndex, wordIndex }) {
       gsap.to(cursorRef.current, {
         x,
         y,
-        duration: 0.08,
-        ease: 'power2.out',
+        duration: 0.07,
+        ease: 'power3.out',
       });
     }
   }, [isActive, charIndex, wordIndex]);
