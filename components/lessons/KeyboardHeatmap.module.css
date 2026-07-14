@@ -1,0 +1,98 @@
+.keyboardContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 24px;
+  background: var(--bg-card);
+  border: 1px solid var(--bg-card-border);
+  border-radius: var(--radius-xl);
+  margin-bottom: 32px;
+}
+
+.heatmapLegend {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  width: 100%;
+  max-width: 300px;
+}
+
+.gradientBar {
+  flex: 1;
+  height: 8px;
+  border-radius: 4px;
+  /* Red to Green */
+  background: linear-gradient(to right, hsl(0, 60%, 40%), hsl(60, 60%, 40%), hsl(120, 60%, 40%));
+}
+
+.keyboard {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.row {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+}
+
+.key {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 40px;
+  background: var(--bg-secondary);
+  border-radius: 6px;
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  color: var(--text-primary);
+  text-transform: uppercase;
+  transition: background-color 0.3s ease;
+  user-select: none;
+}
+
+.standard {
+  width: 40px;
+}
+
+.backspace {
+  width: 80px;
+}
+
+.tab {
+  width: 60px;
+}
+
+.caps {
+  width: 70px;
+}
+
+.enter {
+  width: 90px;
+}
+
+.shift {
+  width: 100px;
+}
+
+.space {
+  width: 250px;
+}
+
+@media (max-width: 768px) {
+  .key {
+    height: 30px;
+    font-size: 0.6rem;
+  }
+  .standard { width: 30px; }
+  .backspace { width: 60px; }
+  .tab { width: 45px; }
+  .caps { width: 55px; }
+  .enter { width: 70px; }
+  .shift { width: 75px; }
+  .space { width: 180px; }
+}

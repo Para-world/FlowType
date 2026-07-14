@@ -1,7 +1,7 @@
 import { useState, useCallback, useRef } from 'react';
 import { calculateWpm, calculateRawWpm, calculateAccuracy, calculateConsistency } from '@/lib/scoring';
 
-export function useTypingEngine(initialWords, mode, modeValue) {
+export function useTypingEngine(initialWords, mode, modeValue, isLesson = false) {
   const [isActive, setIsActive] = useState(false);
   const [isFinished, setIsFinished] = useState(false);
   const [finalResult, setFinalResult] = useState(null);
@@ -106,10 +106,6 @@ export function useTypingEngine(initialWords, mode, modeValue) {
         return prev; // Ignore too many extra chars
       }
 
-      // Deep copy to avoid mutation
-      const newWords = [...formattedWords];
-      newWords[wordIndex] = { ...activeWord, typed: activeWord.typed + char };
-      
       const expectedChar = activeWord.original[activeWord.typed.length];
       const isCorrect = char === expectedChar;
 
@@ -125,6 +121,23 @@ export function useTypingEngine(initialWords, mode, modeValue) {
           charErrorMapRef.current[lc].incorrect++;
         }
       }
+
+      // STRICT MODE for lessons: Block incorrect inputs from advancing the cursor
+      if (isLesson && !isCorrect) {
+        // Just record the error but do not advance typed string
+        return {
+          ...prev,
+          stats: {
+            ...stats,
+            totalTypedChars: stats.totalTypedChars + 1,
+            incorrectChars: stats.incorrectChars + 1,
+          }
+        };
+      }
+
+      // Deep copy to avoid mutation
+      const newWords = [...formattedWords];
+      newWords[wordIndex] = { ...activeWord, typed: activeWord.typed + char };
       
       return {
         ...prev,
@@ -134,7 +147,7 @@ export function useTypingEngine(initialWords, mode, modeValue) {
           ...stats,
           totalTypedChars: stats.totalTypedChars + 1,
           correctChars: stats.correctChars + (isCorrect ? 1 : 0),
-          incorrectChars: stats.incorrectChars + (!isCorrect ? 1 : 0),
+          incorrectChars: stats.incorrectChars + (!isCorrect && !isLesson ? 1 : 0),
           extraChars: stats.extraChars + (newWords[wordIndex].typed.length > activeWord.original.length ? 1 : 0)
         }
       };
@@ -151,12 +164,26 @@ export function useTypingEngine(initialWords, mode, modeValue) {
       if (wordIndex >= formattedWords.length) return prev;
 
       const activeWord = formattedWords[wordIndex];
+      const isComplete = activeWord.original === activeWord.typed;
+
+      // STRICT MODE: prevent space if word isn't finished correctly
+      if (isLesson && !isComplete) {
+         return {
+           ...prev,
+           stats: {
+             ...stats,
+             totalTypedChars: stats.totalTypedChars + 1,
+             incorrectChars: stats.incorrectChars + 1,
+           }
+         };
+      }
+
       const missed = Math.max(0, activeWord.original.length - activeWord.typed.length);
       
       const newWords = [...formattedWords];
       newWords[wordIndex] = {
         ...activeWord,
-        status: activeWord.original === activeWord.typed ? 'correct' : 'incorrect'
+        status: isComplete ? 'correct' : 'incorrect'
       };
 
       const newState = {

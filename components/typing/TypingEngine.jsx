@@ -8,6 +8,8 @@ import { generateWordsList } from '@/data/wordBanks';
 import { getRandomQuote } from '@/data/quotes';
 import { getRandomParagraph } from '@/data/paragraphs';
 import { generateAdaptiveWords, saveCharErrors } from '@/data/adaptiveGenerator';
+import { generateLessonWords } from '@/data/lessonGenerator';
+import { useConfidenceEngine } from '@/hooks/useConfidenceEngine';
 
 import ModeSelector from './ModeSelector';
 import ModuleSelector from './ModuleSelector';
@@ -22,15 +24,18 @@ import { useStore } from '@/store/useStore'; // We will build this next
 export default function TypingEngine({ lesson = null }) {
   const { isAuthenticated, updateUser, addTestResult } = useStore();
   const [mode, setMode] = useState(lesson ? 'words' : 'time');
-  const [modeValue, setModeValue] = useState(lesson ? lesson.content.split(' ').length : 30);
+  const [modeValue, setModeValue] = useState(lesson ? 30 : 30); // lessons default to 30 words per test
   const [module, setModule] = useState('words');
+  
+  const { confidenceMap, updateConfidence, checkLessonPassed } = useConfidenceEngine();
 
   // Initialization logic based on mode/module
   const generateInitialWords = useCallback(() => {
     let rawText = '';
     
     if (lesson) {
-      rawText = lesson.content;
+      // Use dynamic generator based on lesson unlocked keys
+      return generateLessonWords(lesson.unlockedKeys, modeValue, confidenceMap);
     } else if (module === 'adaptive') {
       // Adaptive mode uses the weakness-based generator
       const count = mode === 'words' ? modeValue : 100;
@@ -65,7 +70,7 @@ export default function TypingEngine({ lesson = null }) {
     resetTest,
     finishTest,
     recordSnapshot
-  } = useTypingEngine(initialWords, mode, modeValue);
+  } = useTypingEngine(initialWords, mode, modeValue, !!lesson);
 
   const { timeLeft, startTimer, pauseTimer, resetTimer } = useTimer(
     mode === 'time' ? modeValue : 0, 
@@ -121,14 +126,20 @@ export default function TypingEngine({ lesson = null }) {
       // Always save char error data for the adaptive algorithm (even for guests)
       if (finalResult.charErrorMap) {
         saveCharErrors(finalResult.charErrorMap);
+        updateConfidence(finalResult.charErrorMap); // Update lesson confidence map
       }
 
       if (isAuthenticated) {
         if (lesson) {
-          // It's a lesson, save lesson progress
+          // Check if passed using the confidence engine and base criteria
+          const threshold = lesson.passingCriteria.confidenceThreshold || 0.8;
+          const isConfident = checkLessonPassed(lesson.unlockedKeys, threshold);
+          const passedWpm = finalResult.wpm >= lesson.passingCriteria.minWpm;
+          const passedAcc = finalResult.accuracy >= lesson.passingCriteria.minAccuracy;
+          
           let stars = 0;
-          if (finalResult.wpm >= lesson.passingCriteria.minWpm && finalResult.accuracy >= lesson.passingCriteria.minAccuracy) {
-            stars = 3; // For now, just 3 stars if passed. We can make this dynamic later (e.g. 1 star for min, 3 for exceptional).
+          if (passedWpm && passedAcc && isConfident) {
+            stars = 3; 
           }
           
           api.post('/users/lessons', {

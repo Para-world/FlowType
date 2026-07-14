@@ -3,6 +3,7 @@
 import { useStore } from '@/store/useStore';
 import { lessonCategories, lessons } from '@/data/lessons';
 import LessonCard from '@/components/lessons/LessonCard';
+import KeyboardHeatmap from '@/components/lessons/KeyboardHeatmap';
 import styles from './lessons.module.css';
 
 export default function Lessons() {
@@ -15,6 +16,8 @@ export default function Lessons() {
         <h1 className={styles.pageTitle}>Typing Lessons</h1>
         <p className={styles.pageSubtitle}>Structured learning paths from beginner to advanced.</p>
       </div>
+
+      <KeyboardHeatmap unlockedKeys={['a', 's', 'd', 'f', 'j', 'k', 'l', ';', 'g', 'h', 'e', 'i', 'q', 'w', 'r', 't', 'y', 'u', 'o', 'p', 'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/']} />
       
       {lessonCategories.map(category => {
         const categoryLessons = lessons.filter(l => l.categoryId === category.id);
