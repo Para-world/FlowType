@@ -4,7 +4,7 @@ import { useEffect, useRef, useState, memo } from 'react';
 import gsap from 'gsap';
 import styles from './WordsDisplay.module.css';
 
-const Word = memo(({ wordObj, isActiveWord, isCompleted, charIndex, wordRef }) => {
+const Word = memo(({ wordObj, isActiveWord, isCompleted, charIndex, wordRef, isGhostWord, ghostCharIndex }) => {
   let wordStatusClass = '';
   if (wordObj.status === 'correct') wordStatusClass = styles.correctWord;
   else if (wordObj.status === 'incorrect') wordStatusClass = styles.incorrectWord;
@@ -26,11 +26,14 @@ const Word = memo(({ wordObj, isActiveWord, isCompleted, charIndex, wordRef }) =
           charClass = wordObj.typed[j] === char ? styles.correctChar : styles.incorrectChar;
         }
 
+        const isGhostChar = isGhostWord && j === ghostCharIndex;
+
         return (
           <span 
             key={j} 
-            className={`${styles.char} ${charClass}`}
+            className={`${styles.char} ${charClass} ${isGhostChar ? styles.ghostChar : ''}`}
             data-current-char={isActiveWord && j === charIndex}
+            data-ghost-char={isGhostChar}
           >
             {char}
           </span>
@@ -52,7 +55,7 @@ const Word = memo(({ wordObj, isActiveWord, isCompleted, charIndex, wordRef }) =
 });
 Word.displayName = 'Word';
 
-const WordsDisplay = memo(({ words, wordIndex, charIndex }) => {
+const WordsDisplay = memo(({ words, wordIndex, charIndex, ghostWordIndex = null, ghostCharIndex = null }) => {
   const containerRef = useRef(null);
   const activeWordRef = useRef(null);
   const [lineHeight, setLineHeight] = useState(0);
@@ -102,6 +105,7 @@ const WordsDisplay = memo(({ words, wordIndex, charIndex }) => {
         {words.map((wordObj, i) => {
           const isActiveWord = i === wordIndex;
           const isCompleted = i < wordIndex;
+          const isGhostWord = i === ghostWordIndex;
 
           return (
             <Word
@@ -111,6 +115,8 @@ const WordsDisplay = memo(({ words, wordIndex, charIndex }) => {
               isCompleted={isCompleted}
               charIndex={isActiveWord ? charIndex : null} // Only pass changing charIndex to active word
               wordRef={isActiveWord ? activeWordRef : null}
+              isGhostWord={isGhostWord}
+              ghostCharIndex={isGhostWord ? ghostCharIndex : null}
             />
           );
         })}

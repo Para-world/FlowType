@@ -10,6 +10,7 @@ import { getRandomParagraph } from '@/data/paragraphs';
 import { generateAdaptiveWords, saveCharErrors } from '@/data/adaptiveGenerator';
 import { generateLessonWords } from '@/data/lessonGenerator';
 import { useConfidenceEngine } from '@/hooks/useConfidenceEngine';
+import { useGhostRunner } from '@/hooks/useGhostRunner';
 
 import ModeSelector from './ModeSelector';
 import ModuleSelector from './ModuleSelector';
@@ -77,6 +78,10 @@ export default function TypingEngine({ lesson = null }) {
     mode === 'time' ? modeValue : 0, 
     mode === 'time' ? 'countdown' : 'countup'
   );
+
+  // Initialize Ghost Runner if taking a lesson
+  const targetWpm = lesson ? lesson.passingCriteria.minWpm : null;
+  const { wordIndex: ghostWordIndex, charIndex: ghostCharIndex } = useGhostRunner(isActive, targetWpm, formattedWords);
 
   // Hook up keyboard
   useKeyboard({
@@ -239,7 +244,13 @@ export default function TypingEngine({ lesson = null }) {
       <div style={{ position: 'relative' }}>
         <ProgressBar progress={progress} />
         <Cursor isActive={isActive} charIndex={charIndex} wordIndex={wordIndex} />
-        <WordsDisplay words={formattedWords} wordIndex={wordIndex} charIndex={charIndex} />
+        <WordsDisplay 
+          words={formattedWords} 
+          wordIndex={wordIndex} 
+          charIndex={charIndex} 
+          ghostWordIndex={ghostWordIndex}
+          ghostCharIndex={ghostCharIndex}
+        />
       </div>
 
       <div style={{ textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.85rem' }}>
