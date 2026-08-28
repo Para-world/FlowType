@@ -1,142 +1,159 @@
-.page {
-  --background: #fafafa;
-  --foreground: #fff;
+/* ============================================================
+   Dashboard Page Styles
+   ============================================================ */
 
-  --text-primary: #000;
-  --text-secondary: #666;
+/* --- Dashboard Layout --- */
+.dashboardContent {
+  margin-top: 2rem;
+}
 
-  --button-primary-hover: #383838;
-  --button-secondary-hover: #f2f2f2;
-  --button-secondary-border: #ebebeb;
+.chartRow {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: var(--space-lg);
+  margin-bottom: var(--space-lg);
+}
 
+@media (max-width: 768px) {
+  .chartRow {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* --- Loading State --- */
+.loadingContainer {
   display: flex;
-  flex: 1;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-family: var(--font-geist-sans);
-  background-color: var(--background);
-}
-
-.main {
-  display: flex;
-  flex: 1;
-  width: 100%;
-  max-width: 800px;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: space-between;
-  background-color: var(--foreground);
-  padding: 120px 60px;
-}
-
-.intro {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  text-align: left;
-  gap: 24px;
-}
-
-.intro h1 {
-  max-width: 320px;
-  font-size: 40px;
-  font-weight: 600;
-  line-height: 48px;
-  letter-spacing: -2.4px;
-  text-wrap: balance;
-  color: var(--text-primary);
-}
-
-.intro p {
-  max-width: 440px;
-  font-size: 18px;
-  line-height: 32px;
-  text-wrap: balance;
+  padding: 4rem 0;
+  gap: var(--space-md);
   color: var(--text-secondary);
+  font-size: 0.9rem;
 }
 
-.intro a {
-  font-weight: 500;
-  color: var(--text-primary);
+.loadingSpinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid var(--bg-tertiary);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
 }
 
-.ctas {
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* --- Error State --- */
+.errorContainer {
   display: flex;
-  flex-direction: row;
-  width: 100%;
-  max-width: 440px;
-  gap: 16px;
-  font-size: 14px;
-}
-
-.ctas a {
-  display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
-  height: 40px;
-  padding: 0 16px;
-  border-radius: 128px;
-  border: 1px solid transparent;
-  transition: 0.2s;
+  justify-content: center;
+  padding: 3rem;
+  gap: var(--space-md);
+  background: var(--bg-card);
+  border: 1px solid var(--error-dim);
+  border-radius: var(--radius-lg);
+  text-align: center;
+}
+
+.errorContainer p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.retryButton {
+  background: var(--accent);
+  color: var(--bg-primary);
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: var(--space-sm) var(--space-xl);
+  font-size: 0.85rem;
+  font-weight: 600;
   cursor: pointer;
-  width: fit-content;
-  font-weight: 500;
+  transition: opacity var(--transition-fast);
 }
 
-a.primary {
-  background: var(--text-primary);
-  color: var(--background);
-  gap: 8px;
+.retryButton:hover {
+  opacity: 0.85;
 }
 
-a.secondary {
-  border-color: var(--button-secondary-border);
-}
+/* --- Skeleton Loading (for global loading.js) --- */
 
-/* Enable hover only on non-touch devices */
-@media (hover: hover) and (pointer: fine) {
-  a.primary:hover {
-    background: var(--button-primary-hover);
-    border-color: transparent;
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
   }
-
-  a.secondary:hover {
-    background: var(--button-secondary-hover);
-    border-color: transparent;
+  100% {
+    background-position: 200% 0;
   }
 }
 
-@media (max-width: 600px) {
-  .main {
-    padding: 48px 24px;
-  }
-
-  .intro {
-    gap: 16px;
-  }
-
-  .intro h1 {
-    font-size: 32px;
-    line-height: 40px;
-    letter-spacing: -1.92px;
-  }
+.skeletonBase {
+  background: linear-gradient(
+    90deg,
+    var(--bg-tertiary) 25%,
+    rgba(167, 139, 250, 0.06) 50%,
+    var(--bg-tertiary) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.8s ease-in-out infinite;
+  border-radius: var(--radius-md);
 }
 
-@media (prefers-color-scheme: dark) {
-  .logo {
-    filter: invert();
+.skeletonTitle {
+  composes: skeletonBase;
+  width: 280px;
+  height: 28px;
+  margin-bottom: var(--space-sm);
+}
+
+.skeletonSubtitle {
+  composes: skeletonBase;
+  width: 200px;
+  height: 16px;
+}
+
+.skeletonGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+}
+
+.skeletonCard {
+  composes: skeletonBase;
+  height: 100px;
+  border-radius: var(--radius-lg);
+}
+
+.skeletonChartRow {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: var(--space-lg);
+  margin-bottom: var(--space-lg);
+}
+
+.skeletonChartLarge {
+  composes: skeletonBase;
+  height: 250px;
+}
+
+.skeletonChartSmall {
+  composes: skeletonBase;
+  height: 250px;
+}
+
+@media (max-width: 768px) {
+  .skeletonGrid {
+    grid-template-columns: repeat(2, 1fr);
   }
 
-  .page {
-    --background: #000;
-    --foreground: #000;
-
-    --text-primary: #ededed;
-    --text-secondary: #999;
-
-    --button-primary-hover: #ccc;
-    --button-secondary-hover: #1a1a1a;
-    --button-secondary-border: #1a1a1a;
+  .skeletonChartRow {
+    grid-template-columns: 1fr;
   }
 }

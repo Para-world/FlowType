@@ -1,15 +1,7 @@
-const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const AppError = require('../utils/AppError');
 const asyncHandler = require('../middlewares/asyncHandler');
-
-// ─── Helpers ────────────────────────────────────────
-
-const generateToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRE || '30d',
-  });
-};
+const generateToken = require('../utils/jwt');
 
 // ─── Redirect to Facebook OAuth ─────────────────────
 // GET /api/users/auth/facebook

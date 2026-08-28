@@ -5,9 +5,19 @@ const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
+const mongoSanitize = require('express-mongo-sanitize');
 const connectDB = require('./config/db');
+const logger = require('./config/logger');
 const errorHandler = require('./middlewares/errorMiddleware');
 const AppError = require('./utils/AppError');
+
+// ─── Validate Required Environment Variables ─────────
+const requiredEnvVars = ['MONGODB_URI', 'JWT_SECRET', 'CORS_ORIGIN'];
+const missingVars = requiredEnvVars.filter((key) => !process.env[key]);
+if (missingVars.length > 0) {
+  logger.error(`Missing required environment variables: ${missingVars.join(', ')}`);
+  process.exit(1);
+}
 
 // ─── Connect to MongoDB ─────────────────────────────
 connectDB();
@@ -59,43 +69,23 @@ app.use('/api/users/register', authLimiter);
 
 // ─── Body Parsing ────────────────────────────────────
 
-// Serve static files (uploaded avatars, etc.)
-app.use(express.static(path.join(__dirname, 'public')));
-
 // Body parser — limit payload size
 app.use(express.json({ limit: '10kb' }));
 app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 
-// Data sanitization against NoSQL injection (Express v5 compatible)
-const sanitize = (obj) => {
-  if (obj && typeof obj === 'object') {
-    for (const key in obj) {
-      if (key.startsWith('$') || key.includes('.')) {
-        delete obj[key];
-      } else if (typeof obj[key] === 'object') {
-        sanitize(obj[key]);
-      }
-    }
-  }
-  return obj;
-};
-app.use((req, res, next) => {
-  if (req.body) sanitize(req.body);
-  if (req.params) sanitize(req.params);
-  next();
-});
+// Data sanitization against NoSQL injection
+app.use(mongoSanitize());
 
 // ─── Logging ─────────────────────────────────────────
 
-if (process.env.NODE_ENV === 'development') {
-  app.use(morgan('dev'));
-} else {
-  app.use(morgan('combined'));
-}
+// Use Morgan with Winston stream for HTTP request logging
+const morganFormat = process.env.NODE_ENV === 'production' ? 'combined' : 'dev';
+app.use(morgan(morganFormat, { stream: logger.stream }));
 
 // ─── Static Files ────────────────────────────────────
 
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
 
 // ─── Routes ──────────────────────────────────────────
 
@@ -139,22 +129,22 @@ app.use(errorHandler);
 const PORT = process.env.PORT || 5000;
 
 const server = app.listen(PORT, () => {
-  console.log(`\n🚀 FlowType API v2.0.0`);
-  console.log(`   Environment: ${process.env.NODE_ENV}`);
-  console.log(`   Port: ${PORT}`);
-  console.log(`   CORS Origin: ${process.env.CORS_ORIGIN}\n`);
+  logger.info(`🚀 FlowType API v2.0.0`);
+  logger.info(`   Environment: ${process.env.NODE_ENV}`);
+  logger.info(`   Port: ${PORT}`);
+  logger.info(`   CORS Origin: ${process.env.CORS_ORIGIN}`);
 });
 
 // ─── Graceful Shutdown ───────────────────────────────
 
 process.on('unhandledRejection', (err) => {
-  console.error('UNHANDLED REJECTION 💥:', err.message);
+  logger.error('UNHANDLED REJECTION:', { message: err.message, stack: err.stack });
   server.close(() => process.exit(1));
 });
 
 process.on('SIGTERM', () => {
-  console.log('SIGTERM received. Shutting down gracefully...');
+  logger.info('SIGTERM received. Shutting down gracefully...');
   server.close(() => {
-    console.log('Process terminated.');
+    logger.info('Process terminated.');
   });
 });

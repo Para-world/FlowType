@@ -3,6 +3,7 @@ const User = require('../models/User');
 const Leaderboard = require('../models/Leaderboard');
 const AppError = require('../utils/AppError');
 const asyncHandler = require('../middlewares/asyncHandler');
+const updateStreak = require('../utils/streak');
 
 // ─── Save Test Result ───────────────────────────────
 // POST /api/stats
@@ -38,25 +39,7 @@ const saveTestResult = asyncHandler(async (req, res) => {
   user.stats.totalCharsTyped += correctChars + incorrectChars;
 
   // ─── Update streak ───
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  const lastActive = user.streak.lastActiveDate
-    ? new Date(user.streak.lastActiveDate)
-    : null;
-
-  if (lastActive) {
-    lastActive.setHours(0, 0, 0, 0);
-    const diffDays = Math.round((today - lastActive) / (1000 * 60 * 60 * 24));
-    if (diffDays === 1) {
-      user.streak.current += 1;
-    } else if (diffDays > 1) {
-      user.streak.current = 1;
-    }
-  } else {
-    user.streak.current = 1;
-  }
-  user.streak.longest = Math.max(user.streak.longest, user.streak.current);
-  user.streak.lastActiveDate = today;
+  updateStreak(user);
 
   // ─── XP and Leveling ───
   const xpGained = Math.round(wpm * (accuracy / 100) * (time / 30));
