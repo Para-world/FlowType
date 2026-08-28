@@ -16,6 +16,8 @@ const routeTitles = {
   '/settings': 'Settings',
 };
 
+import { getImageUrl } from '@/lib/api';
+
 export default function Topbar() {
   const pathname = usePathname();
   const title = routeTitles[pathname] || 'FlowType';
@@ -40,7 +42,7 @@ export default function Topbar() {
 
         <div className={styles.avatar}>
           {user?.avatarUrl ? (
-            <img src={user.avatarUrl} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
+            <img src={getImageUrl(user.avatarUrl)} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
           ) : (
             (user?.name || user?.username || '?').charAt(0).toUpperCase()
           )}

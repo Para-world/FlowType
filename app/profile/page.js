@@ -2,7 +2,7 @@
 
 import { useState, useRef } from 'react';
 import { useStore } from '@/store/useStore';
-import { api } from '@/lib/api';
+import { api, getImageUrl } from '@/lib/api';
 import Card from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
 import { User, Mail, Lock, AlertTriangle, Upload, Camera } from 'lucide-react';
@@ -97,7 +97,7 @@ export default function Profile() {
         <div className={styles.avatarSection}>
           <div className={styles.avatarLarge} onClick={() => fileInputRef.current?.click()} style={{ cursor: 'pointer' }}>
             {user.avatarUrl ? (
-              <img src={`${process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'http://localhost:5000'}${user.avatarUrl}`} alt="Avatar" className={styles.avatarImage} />
+              <img src={getImageUrl(user.avatarUrl)} alt="Avatar" className={styles.avatarImage} />
             ) : (
               user.name.charAt(0).toUpperCase()
             )}
