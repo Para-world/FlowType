@@ -36,23 +36,40 @@ export default function Cursor({ isActive, charIndex, wordIndex }) {
     }
   }, [isActive]);
 
+  const xTo = useRef(null);
+  const yTo = useRef(null);
+
+  // Initialize quickTo for high-performance zero-lag tracking
+  useEffect(() => {
+    if (cursorRef.current) {
+      // Reduced duration to 0.04s for lightning-fast tracking while retaining a micro-glide
+      xTo.current = gsap.quickTo(cursorRef.current, 'x', { duration: 0.04, ease: 'power3.out' });
+      yTo.current = gsap.quickTo(cursorRef.current, 'y', { duration: 0.08, ease: 'power3.out' });
+    }
+  }, []);
+
   // Smooth cursor positioning — the hero animation
   useEffect(() => {
     const currentCharEl = document.querySelector('[data-current-char="true"]');
     
-    if (currentCharEl && cursorRef.current) {
+    if (currentCharEl && cursorRef.current && xTo.current && yTo.current) {
       const rect = currentCharEl.getBoundingClientRect();
       const parentRect = cursorRef.current.parentElement.getBoundingClientRect();
       
       const x = rect.left - parentRect.left;
       const y = rect.top - parentRect.top;
 
-      gsap.to(cursorRef.current, {
-        x,
-        y,
-        duration: 0.07,
-        ease: 'power3.out',
-      });
+      xTo.current(x);
+      yTo.current(y);
+
+      // Caret impact effect (squash and stretch) on each keystroke
+      if (isActive) {
+        // Subtle and extremely fast scale to prevent visual noise at 150+ WPM
+        gsap.fromTo(cursorRef.current, 
+          { scaleX: 1.15, scaleY: 0.9 },
+          { scaleX: 1, scaleY: 1, duration: 0.08, ease: 'power2.out' }
+        );
+      }
     }
   }, [isActive, charIndex, wordIndex]);
 

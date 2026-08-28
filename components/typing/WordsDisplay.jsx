@@ -86,8 +86,8 @@ const WordsDisplay = memo(({ words, wordIndex, charIndex, ghostWordIndex = null,
       
       gsap.to(containerRef.current, {
         y: targetY,
-        duration: 0.3,
-        ease: 'power2.out',
+        duration: 0.2,
+        ease: 'back.out(1.0)',
       });
     }
   }, [wordIndex, lineHeight]);
