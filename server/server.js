@@ -5,7 +5,6 @@ const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
-const mongoSanitize = require('express-mongo-sanitize');
 const connectDB = require('./config/db');
 const logger = require('./config/logger');
 const errorHandler = require('./middlewares/errorMiddleware');
@@ -72,9 +71,6 @@ app.use('/api/users/register', authLimiter);
 // Body parser — limit payload size
 app.use(express.json({ limit: '10kb' }));
 app.use(express.urlencoded({ extended: true, limit: '10kb' }));
-
-// Data sanitization against NoSQL injection
-app.use(mongoSanitize());
 
 // ─── Logging ─────────────────────────────────────────
 
